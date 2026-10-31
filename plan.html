@@ -7,7 +7,7 @@ const L={fr:["Le programme d’un ami","Fait avec Spot, à ","Ouvrir dans Spot",
 const T=L||["A friend's plan","Made with Spot, in ","Open in Spot","This plan has ended or can't be found."],q=new URLSearchParams(location.search),c=q.get("c")||"",days=(q.get("d")||"").split("|").filter(Boolean);
 const $=i=>document.getElementById(i);$("t").textContent=T[0];$("o").textContent=T[2];$("o").href="spot://plan"+location.search;
 if(!/^[a-z]+$/.test(c)){$("s").textContent=T[3]}else fetch("https://spotculture.github.io/spot-data/v1/cities/"+c+"/catalog").then(r=>r.json()).then(k=>{
-$("s").textContent=T[1]+({newyork:'New York',hongkong:'Hong Kong',montreal:'Montréal'}[c]||c[0].toUpperCase()+c.slice(1));const E=new Map(k.events.map(e=>[e.id,e])),V=new Map(k.venues.map(v=>[v.id,v]));let n=0;
+$("s").textContent=T[1]+({newyork:'New York',hongkong:'Hong Kong'}[c]||c[0].toUpperCase()+c.slice(1));const E=new Map(k.events.map(e=>[e.id,e])),V=new Map(k.venues.map(v=>[v.id,v]));let n=0;
 for(const day of days){const i=day.indexOf(":"),ids=day.slice(i+1).split(",").filter(x=>E.has(x));if(!ids.length)continue;
 const h=document.createElement("h2");h.textContent=new Date(day.slice(0,i)+"T12:00").toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});$("d").append(h);
 for(const id of ids){n++;const e=E.get(id),a=document.createElement("a");a.className="show";if(e.sourceURL&&/^https:/.test(e.sourceURL))a.href=e.sourceURL;
