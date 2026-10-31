@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A plan from Spot</title>
+<style>:root{--bg:#f6f0e6;--ink:#1d1a17;--mut:#6f655c;--acc:#7c1729;--card:#fffaf2}@media (prefers-color-scheme:dark){:root{--bg:#141110;--ink:#f3ece1;--mut:#a99e91;--acc:#e2637a;--card:#1e1a17}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,sans-serif}main{max-width:640px;margin:auto;padding:24px 16px 60px}
+h1{font:600 36px Georgia,serif;margin:8px 0}h2{font:600 18px Georgia,serif;margin:28px 0 10px;color:var(--acc)}.show{display:flex;gap:12px;background:var(--card);border-radius:16px;padding:10px;margin-bottom:10px;color:inherit;text-decoration:none}.show img{width:72px;height:72px;object-fit:cover;border-radius:10px;flex:none}.show b{font-family:Georgia,serif;display:block}.show span{color:var(--mut);font-size:14px}.btn{display:inline-block;background:var(--acc);color:#fff;padding:12px 20px;border-radius:99px;text-decoration:none;font-weight:600;margin-top:12px}p{color:var(--mut)}</style></head>
+<body><main><h1 id="t"></h1><p id="s"></p><a class="btn" id="o"></a><div id="d"></div></main><script>
+const L={fr:["Le programme d’un ami","Fait avec Spot, à ","Ouvrir dans Spot","Ce programme est terminé ou introuvable."],es:["El plan de un amigo","Hecho con Spot, en ","Abrir en Spot","Este plan ha terminado o no se encuentra."],en:["A friend's plan","Made with Spot, in ","Open in Spot","This plan has ended or can't be found."]}[(navigator.language||"en").slice(0,2)]||null;
+const T=L||["A friend's plan","Made with Spot, in ","Open in Spot","This plan has ended or can't be found."],q=new URLSearchParams(location.search),c=q.get("c")||"",days=(q.get("d")||"").split("|").filter(Boolean);
+const $=i=>document.getElementById(i);$("t").textContent=T[0];$("o").textContent=T[2];$("o").href="spot://plan"+location.search;
+if(!/^[a-z]+$/.test(c)){$("s").textContent=T[3]}else fetch("https://spotculture.github.io/spot-data/v1/cities/"+c+"/catalog").then(r=>r.json()).then(k=>{
+$("s").textContent=T[1]+({newyork:'New York',hongkong:'Hong Kong',montreal:'Montréal'}[c]||c[0].toUpperCase()+c.slice(1));const E=new Map(k.events.map(e=>[e.id,e])),V=new Map(k.venues.map(v=>[v.id,v]));let n=0;
+for(const day of days){const i=day.indexOf(":"),ids=day.slice(i+1).split(",").filter(x=>E.has(x));if(!ids.length)continue;
+const h=document.createElement("h2");h.textContent=new Date(day.slice(0,i)+"T12:00").toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});$("d").append(h);
+for(const id of ids){n++;const e=E.get(id),a=document.createElement("a");a.className="show";if(e.sourceURL&&/^https:/.test(e.sourceURL))a.href=e.sourceURL;
+if(e.imageURL&&/^https:/.test(e.imageURL)){const m=document.createElement("img");m.src=e.imageURL;m.alt="";a.append(m)}
+const w=document.createElement("div"),b=document.createElement("b"),s=document.createElement("span");b.textContent=e.title;s.textContent=(V.get(e.venueID)||{}).name||"";w.append(b,s);a.append(w);$("d").append(a)}}
+if(!n)$("s").textContent=T[3]}).catch(()=>{$("s").textContent=T[3]})
+</script></main></body></html>
